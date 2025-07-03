@@ -1,0 +1,28 @@
+# macOS 系统文件
+.DS_Store
+
+# Python 运行缓存
+__pycache__/
+*.py[cod]
+
+# 虚拟环境（本地才有的，别人可以自己建）
+venv/
+env/
+
+# Jupyter 临时文件
+.ipynb_checkpoints/
+
+# 日志、临时或备份文件
+*.log
+*.tmp
+*.swp
+*.bak
+
+# VSCode 或 PyCharm 设置（不必要上传）
+.vscode/
+.idea/
+
+# 自定义排除
+python_files/images/
+python_files/npy_data/title.npy
+python_files/npy_data/uploader.npy
