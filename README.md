@@ -78,6 +78,10 @@ Boston University · Computer Engineering
 Boston University · Computer Engineering  
 📧 [jimmytai@bu.edu](mailto:jimmytai@bu.edu)
 
+**Weizhou Zhang**  
+The University of Hong Kong · Computer Engineering  
+📧 [u3609832@connect.hku.hk](mailto:u3609832@connect.hku.hk)
+
 ---
 
 ## 📄 License
