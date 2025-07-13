@@ -26,3 +26,4 @@ env/
 python_files/images/
 python_files/npy_data/title.npy
 python_files/npy_data/uploader.npy
+uploadtest.txt
