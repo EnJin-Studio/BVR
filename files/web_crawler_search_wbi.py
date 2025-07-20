@@ -8,6 +8,7 @@ from html import unescape
 import re
 import hashlib
 import urllib.parse
+import csv
 
 # Headers
 HEADERS = {
@@ -16,7 +17,7 @@ HEADERS = {
     "Origin": "https://search.bilibili.com",
     "Accept": "application/json",
     "Accept-Language": "zh-CN,zh;q=0.9",
-    "Cookie": "SESSDATA=70e8c641%2C1767054841%2C82389%2A72CjCptWo9Urc56hC_e7_eq0qGf52CcbgKX8RqRyN-qHC9XYs-Qmf1ngLSDGcblDCZ_4MSVjRQOWw2MDNvYm8wa3R1bG9FVFFIQUJwbmRuUXdQTWtmNjVkNGFna1l0cXBGRS1MQjlvREx3V2ZLaEk4VUhuVmtnQVhsZVd3TG45eVh1ajJ1MWtEbENnIIEC; bili_jct=93b1dd5518b6c9744c8014b9ae869f5c; DedeUserID=3546928264514104; sid=o6460e9h"
+    "Cookie": "SESSDATA=74eaeead%2C1768593444%2C6fdc3%2A71CjBk2jKBeb_oknADqnK-oRijK9jBIrxEOus424alZ7AQpSsvcVxInhn7SLeVtAi5QU4SVkxHVV9zendEeDJXOTBITHl4NE5vTEhfTHFpS19CT2VnVEhOMUEzTXRxQ1VDWmpZcDAxWlVVWTlVTlVTdC1rMS1OYnBjV2ZyMnl0N0libG0tRkdJTjRRIIEC; bili_jct=4510afc58694047a4156f944ce24fd91; DedeUserID=3546928264514104; sid=h9n9846p;"
     }
 
 def clean_html(text):
@@ -158,19 +159,23 @@ def main(partition_tid, keywords, start_date, end_date, pages=50, delay=(2, 6)):
                 break
             data = resp.json()
             items=parse_search_items(data, start_ts, end_ts)
+            added_count = 0
             for it in items:
-                bvid=it["bvid"]
+                bvid = it["bvid"]
                 if bvid and bvid not in seen:
                     # it["uploader_follower"]=get_follower_count(it["uploader_mid"])
                     # it.pop("uploader_mid",None)
                     all_items.append(it)
                     seen.add(bvid)
-            print(f" → 第{page}页新增{len(items)}条")
+                    added_count += 1
+            print(f" → 第{page}页实际新增{added_count}条，原始获取{len(items)}条")
+
+
             time.sleep(random.uniform(delay[0], delay[1]))
 
     df=pd.DataFrame(all_items)
     batch=f"csv_data/wbi_{partition_tid}.csv"
-    df.to_csv(batch,index=False,encoding='utf-8-sig')
+    df.to_csv(batch, index=False, encoding='utf-8-sig', quoting=csv.QUOTE_ALL)
     print(f"[SAVE] 批次保存: {batch}")
 
     if os.path.exists(history):
@@ -178,12 +183,12 @@ def main(partition_tid, keywords, start_date, end_date, pages=50, delay=(2, 6)):
         df_all=pd.concat([df,df_hist]).drop_duplicates("bvid")
     else:
         df_all=df
-    df_all.to_csv(history,index=False,encoding='utf-8-sig')
+    df_all.to_csv(history, index=False, encoding='utf-8-sig', quoting=csv.QUOTE_ALL)
     print(f"[DONE] 合并完毕,共 {len(df_all)} 条")
 
 if __name__ == "__main__":
-    partition_ids = [160, 181, 188, 202, 211, 217, 223, 234]  
+    partition_ids = [65]  
     kw = ["的"]
     for pid in partition_ids:
         print(f"\n[START] 正在爬取分区 {pid} 的数据")
-        main(pid, kw, "2010-01-01", "2025-07-02", pages=50, delay=(1, 9))
+        main(pid, kw, "2010-01-01", "2025-07-02", pages=20, delay=(1, 9))
