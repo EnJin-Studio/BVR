@@ -1,5 +1,5 @@
 # 🔍 Bilibili Video View Count Predictor
-
+111
 A multimodal machine learning pipeline to predict Bilibili homepage video view counts. Designed to support content ranking, scoring, and performance forecasting.
 
 ---
@@ -77,6 +77,10 @@ Boston University · Computer Engineering
 **Feng Tai (Jimmy)**  
 Boston University · Computer Engineering  
 📧 [jimmytai@bu.edu](mailto:jimmytai@bu.edu)
+
+**Weizhou Zhang**  
+The University of Hong Kong · Computer Engineering  
+📧 [u3609832@connect.hku.hk](mailto:u3609832@connect.hku.hk)
 
 ---
 
