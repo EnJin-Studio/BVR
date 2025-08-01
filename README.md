@@ -1,70 +1,109 @@
-# 🔍 Bilibili Video View Count Predictor
-111
-A multimodal machine learning pipeline to predict Bilibili homepage video view counts. Designed to support content ranking, scoring, and performance forecasting.
+# 🔍 Bilibili Video View & Quality Predictor
+A multimodal ML pipeline that predicts Bilibili homepage video views **and** benchmarks each video against ideal style profiles. Built for ranking, scoring, edit guidance, and performance forecasting.
+
+---
+
+## 👥 Who It’s For
+- **Individual creators** — clear, quantitative feedback on style-profile fit and where to focus the next edits.
+- **Marketing & analytics teams** — objective, high-throughput evaluation of large libraries and engagement prediction.
+- **Platform curators & researchers** — detailed reports to inform recommendations, optimize algorithms, and study content trends.
 
 ---
 
 ## 🎯 Project Goals
-
 - 📥 Crawl Bilibili homepage video metadata and thumbnails  
-- 📈 Train and evaluate a regression model
-- 📊 Provide predictions, content insights, and ranking capabilities  
+- 📈 Train and evaluate regression models for view prediction  
+- 🧭 Generate per-video diagnostics: style-fit scores and actionable edit suggestions  
+- 📊 Provide predictions, content insights, and batch ranking capabilities
 
 ---
 
 ## 📁 Project Structure
 
 ```
-python_files/
-├── csv_data/                       # CSV data files (e.g., video_wbi.csv)
-│   └── ...
-├── web_crawler_search_wbi.py      # crawler for tag-based search(video & uploader info)
-.gitignore
-README.md
+.
+├── files/
+│   ├── csv_data_big_division/ 
+│   │   ├── video_wbi.csv
+│   │   └── wbi_*.csv
+│   ├── csv_data_game_division/ 
+│   │   ├── video_game_division.csv
+│   │   └── wbi_*.csv
+│   └── test_data/  
+│       ├── summary_metrics.csv
+│       ├── test.csv
+│       └── video_level_results.csv
+├── asw_test.py
+├── web_crawler_search_wbi.py
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-## 📌 Input Feature Vector
+## 🧩 Input Feature Vector
+
+**Metadata**
+- Title, duration, publish date, video ID, etc.
+- Cover image
+- Uploader name, follower count,
+
+**Tags**
+- Original tags from uploader  
+- Model-generated tags (topic/style)  
+- Tag alignment metrics
+
+**Style & Dimensions**
+- User-desired style profile
+- Dimension weights (Teaching Clarity, Aesthetics, Emotional Impact, Humor, Trend References)  
+- Model-detected proportions for each dimension
 
 ---
 
-## 🎯 Prediction Target
+## 🎯 Prediction Targets
 
 - `view_count`
+- Optional engagement: `likes`, `favorites`, `shares` 
+- `home_page_recommendation_prob`
+- Per-dimension scores (0–10) and final weighted composite score (0–10)  
+- Tag-match status (`matched` / `partial` / `mismatched`) + brief rationale
 
 ---
 
 ## 🔧 Installation
 
 Key dependencies:
-- `numpy`, `pandas`
-- `requests`
+- `numpy`, `pandas`, `requests`
+- `scikit-learn`
+- `sentence-transformers`, `torch` 
 
 ---
 
 ## 🚀 Usage
 
-### 1. Crawl Bilibili videos
+### 1) Crawl Bilibili videos
+    python web_crawler_search_wbi.py
+Outputs CSVs under `files/csv_data_*`.
 
-```bash
-python python_files/web_crawler_search_wbi.py
-```
+### 2) Run analysis & scoring
+    python asw_test.py
+Reads CSVs from `files/csv_data_*` and writes to `files/test_data/`
 
 ---
 
 ## 🧠 Potential Applications
 
-- Predict the popularity of a new video before upload  
-- Assist Bilibili creators in thumbnail/title optimization  
-- Rank candidate videos in a homepage recommender  
-- Visualize latent features of popular content  
+- Pre-upload performance prediction & edit guidance for creators  
+- High-throughput batch evaluation for marketing/analytics teams  
+- Curator/research tooling: trend diagnostics, ranking, and reports
 
 ---
 
 ## 🧪 Future Work
 
-- Build a Website for easier use  
+- Web UI for interactive style profiles & what-if edits  
+- Add key-frame visual analysis
+- Expand trend/keyword detectors and topic taxonomies
 
 ---
 
