@@ -23,6 +23,27 @@ def fetch_recommend_page(ps=30, fresh_idx=1):
     bvids = [v.get("bvid") for v in data.get("data", {}).get("item", []) if v.get("bvid")]
     return bvids
 
+def fetch_uploader_follower(mid):
+    url = "https://api.bilibili.com/x/relation/stat"
+    params = {"vmid": mid}
+    try:
+        resp = requests.get(url, params=params, headers=HEADERS, timeout=5)
+        resp.raise_for_status()
+        return resp.json().get("data", {}).get("follower")
+    except:
+        return None
+
+def fetch_video_tags(bvid):
+    url = "https://api.bilibili.com/x/tag/archive/tags"
+    params = {"bvid": bvid}
+    try:
+        resp = requests.get(url, params=params, headers=HEADERS, timeout=5)
+        resp.raise_for_status()
+        tags = resp.json().get("data", [])
+        return [tag.get("tag_name") for tag in tags if tag.get("tag_name")]
+    except:
+        return []
+
 # 根据 bvid 获取详细数据
 def fetch_video_detail(bvid):
     url = "https://api.bilibili.com/x/web-interface/view"
@@ -49,6 +70,8 @@ def fetch_video_detail(bvid):
             "mid": owner.get("mid"),
             "name": owner.get("name"),
             "face": owner.get("face"),
+            "uploader_follower": fetch_uploader_follower(owner.get("mid")),
+            "tags": ",".join(fetch_video_tags(bvid)),
             "view": stat.get("view"),
             "danmaku": stat.get("danmaku"),
             "reply": stat.get("reply"),
@@ -75,7 +98,7 @@ def fetch_all_details(bvid_list, max_workers=5):
 
 fieldnames = [
     "bvid", "aid", "videos", "tid", "tid_v2", "tname", "tname_v2",
-    "pic", "title", "pubdate", "duration", "mid", "name", "face",
+    "pic", "title", "pubdate", "duration", "mid", "name", "face", "uploader_follower", "tags",
     "view", "danmaku", "reply", "favorite", "coin", "share", "now_rank", "his_rank", "like"
 ]
 
@@ -110,4 +133,4 @@ def main(pages=5, ps=30, delay=1, max_workers=5):
 
 if __name__ == "__main__":
     # max_workers=5 比较安全，不容易被封，速度也可以
-    main(pages=60, ps=30, delay=1, max_workers=5)
+    main(pages=55, ps=30, delay=1, max_workers=5)
